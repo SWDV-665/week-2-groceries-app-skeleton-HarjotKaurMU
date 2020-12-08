@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Grocery List
+      {{title}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -12,71 +12,15 @@
       <ion-title size="large">Grocery list</ion-title>
     </ion-toolbar>
   </ion-header>
-  <script>
-  const groceryList  = [
-  {
-    "name": "Milk",
-    "quantity" : "2" 
-  },
-  {
-    "name": "Onions",
-    "quantity" : "4" 
-  },
-  {
-    "name": "Ketchup",
-    "quantity" : "1" 
-  },
-  {
-    "name": "Rice",
-    "quantity" : "3" 
-  },
-  {
-    "name": "Cereal",
-    "quantity" : "4" 
-  }
 
-] 
-
-  </script>
 
   <!-- List of grocery Items -->
-  <ul >
-    <li *ngFor = "let item of groceryList">{{item.name}} </li>
-  </ul>
-<ion-list >
+
+ <!-- <ion-list >
   <ion-item *ngFor = "let item of groceryList"> 
     <ion-label>{{item.name}}</ion-label>
   </ion-item>
-  <!-- <ion-item>
-    <ion-label>Ketchup</ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-label>Juice</ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-label>Milk</ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-label>Bread</ion-label>
-  </ion-item> -->
 
-  <!-- <ion-item-sliding>
-    <ion-item-options side="start">
-      <ion-item-option color="danger" (click)="share(item)">Done</ion-item-option>
-    </ion-item-options>
-    <ion-item>
-      <ion-label>Item Options</ion-label>
-    </ion-item>
-  </ion-item-sliding>
-
-  <ion-item-sliding>
-    <ion-item-options side="start">
-      <ion-item-option color="danger" (click)="share(item)">Done</ion-item-option>
-    </ion-item-options>
-    <ion-item>
-      <ion-label>Item Options</ion-label>
-    </ion-item>
-  </ion-item-sliding> -->
    <ion-item-sliding>
     <ion-item-options side="start">
       <ion-item-option color="danger" (click)="delete(item)">Done</ion-item-option>
@@ -114,7 +58,28 @@
   </ion-item-sliding>
 
 
+</ion-list>  -->
+
+<ion-list>
+  <ion-item-sliding *ngFor="let item of groceryList">
+     <ion-item>
+        <h2>{{item.name}}</h2>  -
+        <h3>{{item.quantity}}</h3>
+     </ion-item>
+     <ion-item-options side="start">
+      <ion-item-option color="danger" (click)="deleteItem(item)" >Done</ion-item-option>
+    </ion-item-options>
+
+  </ion-item-sliding>
 </ion-list>
+
+<ion-content>
+  <!-- fab placed to the top end -->
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button (click)=addItemAlert(item)>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
   <app-explore-container name="Groceries"></app-explore-container>
 </ion-content>
