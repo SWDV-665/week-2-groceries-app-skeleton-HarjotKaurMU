@@ -1,5 +1,7 @@
 import { identifierModuleUrl } from '@angular/compiler';
 import { Component } from '@angular/core';
+import { DataService } from '../data.service';
+import { InputDialogServiceService } from '../input-dialog-service.service';
 
 @Component({
   selector: 'app-tab1',
@@ -10,39 +12,29 @@ import { Component } from '@angular/core';
 export class Tab1Page {
 
  
-  constructor() {}
-    title = "Grocery List "
-    groceryList  = [
-    {
-      "name": "Milk",
-      "quantity" : "2" 
-    },
-    {
-      "name": "Onions",
-      "quantity" : "4" 
-    },
-    {
-      "name": "Ketchup",
-      "quantity" : "1" 
-    },
-    {
-      "name": "Rice",
-      "quantity" : "3" 
-    },
-    {
-      "name": "Cereal",
-      "quantity" : "4" 
-    }];
+  constructor(public dataService:DataService, public inputDialogService: InputDialogServiceService) {}
+    groceryList = this.dataService.groceryList;
+    title = this.dataService.title;
 
-    deleteItem(deletedItem){
+
+    deleteItem(deletedItem, index){
       console.log("Removing item", deletedItem.name)
-      var filtered = this.groceryList.filter(function(el) { return el.name != deletedItem.name; });
-      this.groceryList = filtered;
+      // var filtered = this.groceryList.filter(function(el) { return el.name != deletedItem.name; });
+      // this.groceryList = filtered;
+      // this.groceryList.splice(index, 1);
+      this.dataService.removeItem(index)
     }
 
-    addItem(itemName, itemQuantity){
-      this.groceryList.push({name: itemName, quantity: itemQuantity})
+    addItem(){
+      // this.groceryList.push({name: itemName, quantity: itemQuantity})
+      this.inputDialogService.addItemAlert()
     }
+
+    editItem(item, index){
+      // this.groceryList.push({name: itemName, quantity: itemQuantity})
+      this.inputDialogService.editItemAlert(item, index)
+    }
+    
     
     addItemAlert() {
       const alert = document.createElement('ion-alert');
@@ -69,13 +61,55 @@ export class Tab1Page {
           role: 'cancel',
           cssClass: 'secondary',
           handler: () => {
-            console.log('Confirm Cancel')
+            console.log('Confirm add Cancel')
           }
         }, {
           text: 'Ok',
           handler: (item) => {
-            console.log('Confirm Ok')
-            this.addItem(item.name, item.quantity)
+            console.log('Confirm add Ok')
+            // this.addItem(item.name, item.quantity)
+            this.dataService.addItem(item);
+          }
+        }
+      ];
+    
+      document.body.appendChild(alert);
+      return alert.present();
+    }
+
+    editItemAlert(item, index) {
+      const alert = document.createElement('ion-alert');
+      alert.cssClass = 'my-custom-class';
+      alert.header = 'New item';
+      alert.inputs = [
+        {
+          name: 'name',
+          placeholder: 'Item name',
+          value: item.name
+        },
+        {
+          name: 'quantity',
+          id: 'quantity-id',
+          type: 'number',
+          min: 0,
+          placeholder: 'Item quantity'
+        }
+   
+      ];
+      alert.buttons = [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm edit Cancel')
+          }
+        }, {
+          text: 'Ok',
+          handler: (item) => {
+            console.log('Confirm edit Ok')
+            // this.addItem(item.name, item.quantity)
+            this.groceryList[index] = item;
           }
         }
       ];
