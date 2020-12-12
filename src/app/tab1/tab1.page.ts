@@ -2,6 +2,7 @@ import { identifierModuleUrl } from '@angular/compiler';
 import { Component } from '@angular/core';
 import { DataService } from '../data.service';
 import { InputDialogServiceService } from '../input-dialog-service.service';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @Component({
   selector: 'app-tab1',
@@ -12,7 +13,7 @@ import { InputDialogServiceService } from '../input-dialog-service.service';
 export class Tab1Page {
 
  
-  constructor(public dataService:DataService, public inputDialogService: InputDialogServiceService) {}
+  constructor(public dataService:DataService, public inputDialogService: InputDialogServiceService, public socialSharing: SocialSharing) {}
     groceryList = this.dataService.groceryList;
     title = this.dataService.title;
 
@@ -33,6 +34,25 @@ export class Tab1Page {
     editItem(item, index){
       // this.groceryList.push({name: itemName, quantity: itemQuantity})
       this.inputDialogService.editItemAlert(item, index)
+    }
+
+    shareItem(item){
+      let message = "Grocery: Item name - " + item.name + " Item quantity - " + item.quantity;
+      let subject = "Shared via Groceries app";
+      this.socialSharing.share(message, subject).then(() => {
+        console.log("Shared successfully")
+        // Sharing via email is possible
+      }).catch((error) => {
+        // Sharing via email is not possible
+        console.error("Error whiel sharing" + error);
+      });
+      
+      // Share via email
+      // this.socialSharing.shareViaEmail('Body', 'Subject', ['recipient@example.org']).then(() => {
+      //   // Success!
+      // }).catch(() => {
+      //   // Error!
+      // });
     }
     
     
